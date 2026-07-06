@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Emergency Disaster Evacuation Simulator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>Emergency Disaster Evacuation Simulator</h1>
+        <p class="subtitle">Safe routes, blocked roads, rescue centers, live disaster spread, heatmap, and advanced DSA algorithms.</p>
+      </div>
+      <section class="stats" aria-label="Simulation statistics">
+        <div class="stat"><b id="safeCount">0</b><span>safe junctions</span></div>
+        <div class="stat"><b id="blockedCount">0</b><span>blocked roads</span></div>
+        <div class="stat"><b id="routeCost">--</b><span>route cost</span></div>
+        <div class="stat"><b id="visitedCount">0</b><span>visited nodes</span></div>
+      </section>
+    </header>
+
+    <aside class="sidebar">
+      <section class="panel">
+        <div class="panel-title"><h2>Command Center</h2><span class="pill" id="scenarioName">Flood Surge</span></div>
+        <div class="controls">
+          <label>Path algorithm
+            <select id="algorithm">
+              <option value="astar">A* Search - guided route</option>
+              <option value="dijkstra">Dijkstra - weighted safest route</option>
+              <option value="bfs">BFS - fewest roads</option>
+              <option value="dfs">DFS - reachability patrol</option>
+            </select>
+          </label>
+          <label>Disaster scenario
+            <select id="scenario">
+              <option value="flood">Flood Surge</option>
+              <option value="wildfire">Wildfire Front</option>
+              <option value="quake">Earthquake Damage</option>
+              <option value="chemical">Chemical Leak</option>
+            </select>
+          </label>
+          <label>Intensity <span id="intensityValue">55</span>%
+            <input id="intensity" type="range" min="10" max="95" value="55">
+          </label>
+          <div class="button-grid">
+            <button class="primary" id="routeBtn">Find Safe Route</button>
+            <button id="nearestBtn">Nearest Rescue</button>
+            <button id="spreadBtn">Start Live Spread</button>
+            <button class="danger" id="resetBtn">Reset City</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title"><h2>Edit Map</h2><span class="pill" id="modeLabel">Evacuee</span></div>
+        <div class="controls">
+          <div class="mode-grid" id="modes">
+            <button data-mode="start" class="active">Evacuee</button>
+            <button data-mode="rescue">Rescue</button>
+            <button data-mode="block">Block</button>
+            <button data-mode="heat">Hazard</button>
+            <button data-mode="clear">Clear</button>
+            <button data-mode="inspect">Inspect</button>
+          </div>
+        </div>
+        <div class="legend">
+          <div><span class="swatch evacuee"></span>Evacuee</div>
+          <div><span class="swatch rescue"></span>Rescue</div>
+          <div><span class="swatch hazard"></span>Hazard</div>
+          <div><span class="swatch blocked"></span>Blocked</div>
+          <div><span class="swatch route"></span>Route</div>
+          <div><span class="swatch search"></span>Search</div>
+        </div>
+      </section>
+    </aside>
+
+    <section class="panel map-panel">
+      <div class="toolbar">
+        <div class="toolbar-actions">
+          <button id="zoomIn">+</button>
+          <button id="zoomOut">-</button>
+          <button id="randomBtn">Random Incident</button>
+          <button id="componentsBtn">Connectivity</button>
+        </div>
+        <span class="pill" id="connectivity">Union-Find: -- zones</span>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="city" width="1200" height="760">Your browser does not support Canvas.</canvas>
+        <div class="canvas-fallback" id="canvasFallback" role="alert">Canvas is not supported in this browser. Please open the simulator in a modern browser such as Chrome, Edge, Firefox, or Safari.</div>
+        <div class="map-note">Click a junction to set evacuee, rescue center, hazard, or blocked roads. Road thickness reflects weighted danger cost.</div>
+      </div>
+      <div class="timeline">
+        <div class="progress"><span id="spreadProgress"></span></div>
+        <span class="pill" id="timeStep">T+0</span>
+      </div>
+    </section>
+
+    <aside class="rightbar">
+      <section class="panel">
+        <div class="panel-title"><h2>Algorithm Trace</h2><span class="pill" id="activeAlgo">A*</span></div>
+        <div class="info-stack">
+          <div class="row"><div>Priority Queue / Queue operations<small id="queueStats">waiting</small></div><span class="pill" id="frontierSize">0</span></div>
+          <pre class="trace" id="trace"></pre>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-title"><h2>Rescue Centers</h2><span class="pill">HashMap</span></div>
+        <div class="rows" id="rescueList"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-title"><h2>Five Member Split</h2><span class="pill">Presentation</span></div>
+        <div class="rows">
+          <div class="row"><div>Member 1<small>Graph model, roads, HashMap.</small></div><span class="pill">Graphs</span></div>
+          <div class="row"><div>Member 2<small>BFS, DFS, queue traversal.</small></div><span class="pill">BFS/DFS</span></div>
+          <div class="row"><div>Member 3<small>Dijkstra, A*, priority queue.</small></div><span class="pill">Routing</span></div>
+          <div class="row"><div>Member 4<small>Blocked roads and Union-Find.</small></div><span class="pill">Union-Find</span></div>
+          <div class="row"><div>Member 5<small>Live simulation and heatmap UI.</small></div><span class="pill">Simulation</span></div>
+        </div>
+      </section>
+    </aside>
+  </main>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
